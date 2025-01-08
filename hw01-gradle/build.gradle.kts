@@ -9,7 +9,7 @@ tasks.register("customFatJar", Jar::class) {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
 	manifest {
-		attributes["Main-Class"] = "ru.kolesnikov.hw01gradle.Hw01GradleApplication"
+		attributes(mapOf("Main-Class" to "ru.kolesnikov.hw01gradle.Hw01GradleApplication"))
 	}
 
 	from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })

@@ -9,6 +9,8 @@ pluginManagement {
     val jib: String by settings
     val protobufVer: String by settings
     val spotless: String by settings
+    val sonarlint: String by settings
+
 
     plugins {
         id("fr.brouillard.oss.gradle.jgitver") version jgitver
@@ -18,5 +20,6 @@ pluginManagement {
         id("com.google.cloud.tools.jib") version jib
         id("com.google.protobuf") version protobufVer
         id("com.diffplug.spotless") version spotless
+        id("name.remal.sonarlint") version sonarlint
     }
 }
