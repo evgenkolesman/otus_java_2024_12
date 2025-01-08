@@ -15,3 +15,7 @@ tasks.register("customFatJar", Jar::class) {
 	from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 	with(tasks.jar.get())
 }
+
+tasks.named("build"){
+	dependsOn("customFatJar")
+}
