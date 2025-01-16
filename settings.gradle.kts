@@ -1,11 +1,10 @@
 rootProject.name = "otus_upgrade_proj"
 include("hw01-gradle")
-include("L02-gradle2")
-include("L02-gradle2-libApi")
-include("L02-gradle2-libApiUse")
-include("L02-gradle2-libApiUse")
-include("L02-logging")
-include("L03-generics")
+include("hw02-gradle")
+include("hw02-gradle-libApi")
+include("hw02-gradle-libApiUse")
+include("hw02-gradle-logging")
+include("hw03-generics")
 
 pluginManagement {
     val jgitver: String by settings
