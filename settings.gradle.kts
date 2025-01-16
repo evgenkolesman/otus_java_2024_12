@@ -1,5 +1,11 @@
-rootProject.name = "otus_java_2024_12"
+rootProject.name = "otus_upgrade_proj"
 include("hw01-gradle")
+include("L02-gradle2")
+include("L02-gradle2-libApi")
+include("L02-gradle2-libApiUse")
+include("L02-gradle2-libApiUse")
+include("L02-logging")
+include("L03-generics")
 
 pluginManagement {
     val jgitver: String by settings
