@@ -5,8 +5,6 @@ public class Customer implements Comparable<Customer> {
     private String name;
     private long scores;
 
-    // todo: 1. в этом классе надо исправить ошибки
-
     public Customer(long id, String name, long scores) {
         this.id = id;
         this.name = name;
@@ -40,8 +38,12 @@ public class Customer implements Comparable<Customer> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Customer customer = (Customer) o;
 
@@ -55,8 +57,12 @@ public class Customer implements Comparable<Customer> {
 
     @Override
     public int compareTo(Customer o) {
-        if (o == null) return -1;
-        if (this.id > o.getId()) return 1;
+        if (o == null) {
+            return -1;
+        }
+        if (this.id > o.getId()) {
+            return 1;
+        }
         if (this.id < o.getId()) {
             return -1;
         }
