@@ -1,14 +1,9 @@
 package homework;
 
-import java.util.Objects;
-
-@SuppressWarnings({"java:S1135"}) // при выполнении ДЗ эту аннотацию надо удалить
-public class Customer {
+public class Customer implements Comparable<Customer> {
     private final long id;
     private String name;
     private long scores;
-
-    // todo: 1. в этом классе надо исправить ошибки
 
     public Customer(long id, String name, long scores) {
         this.id = id;
@@ -43,21 +38,37 @@ public class Customer {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Customer customer = (Customer) o;
 
-        if (id != customer.id) return false;
-        if (scores != customer.scores) return false;
-        return Objects.equals(name, customer.name);
+        return id == customer.id;
     }
 
     @Override
     public int hashCode() {
-        int result = Long.hashCode(id);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + Long.hashCode(scores);
-        return result;
+        return Long.hashCode(id);
+    }
+
+    @Override
+    public int compareTo(Customer o) {
+        if (o == null) {
+            return -1;
+        }
+        if (this.id > o.getId()) {
+            return 1;
+        }
+        if (this.id < o.getId()) {
+            return -1;
+        }
+        if (this.id == o.getId()) {
+            return 0;
+        }
+        return -1;
     }
 }
