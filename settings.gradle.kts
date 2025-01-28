@@ -5,6 +5,9 @@ include("hw02-gradle-libApi")
 include("hw02-gradle-libApiUse")
 include("hw02-gradle-logging")
 include("hw03-generics")
+include("hw04-qa")
+include("hw05-collections")
+include("hw06-annotations")
 
 pluginManagement {
     val jgitver: String by settings
