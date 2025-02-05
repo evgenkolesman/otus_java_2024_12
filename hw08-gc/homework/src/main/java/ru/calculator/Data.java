@@ -1,13 +1,14 @@
 package ru.calculator;
 
 public class Data {
-    private final Integer value;
+    private final int value;
 
     public Data(Integer value) {
+        if (value == null) throw new NullPointerException("VALUE CANNOT BE NULL");
         this.value = value;
     }
 
-    public Integer getValue() {
+    public int getValue() {
         return value;
     }
 }

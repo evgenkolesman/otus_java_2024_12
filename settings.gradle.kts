@@ -9,7 +9,8 @@ include("hw04-qa")
 include("hw05-collections")
 include("hw06-annotations")
 include("hw06-junit")
-include("hw08-gc")
+include("hw08-gc:demo")
+include("hw08-gc:homework")
 include("hw09-docker")
 
 pluginManagement {
