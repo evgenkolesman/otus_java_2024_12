@@ -8,6 +8,9 @@ include("hw03-generics")
 include("hw04-qa")
 include("hw05-collections")
 include("hw06-annotations")
+include("hw06-junit")
+include("hw08-gc")
+include("hw09-docker")
 
 pluginManagement {
     val jgitver: String by settings

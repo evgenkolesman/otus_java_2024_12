@@ -1,6 +1,6 @@
 dependencies {
     implementation ("ch.qos.logback:logback-classic")
-//    implementation ("java.util.concurrent")
+//    implementation("clojure-interop:java.util.concurrent")
 
     testImplementation ("org.openjdk.jmh:jmh-core")
     testAnnotationProcessor ("org.openjdk.jmh:jmh-generator-annprocess")
