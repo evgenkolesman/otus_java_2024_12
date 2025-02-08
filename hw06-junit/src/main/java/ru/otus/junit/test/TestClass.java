@@ -1,14 +1,11 @@
 package ru.otus.junit.test;
 
-import lombok.extern.slf4j.Slf4j;
-import ru.otus.junit.annotations.After;
-import ru.otus.junit.annotations.Before;
-import ru.otus.junit.annotations.Test;
+import java.util.logging.*;
+import ru.otus.junit.annotations.*;
 
-@Slf4j
 @SuppressWarnings("unused")
 public class TestClass {
-
+    Logger log = Logger.getLogger(TestClass.class.getName());
 
     @Before
     void setUp() {
@@ -20,17 +17,19 @@ public class TestClass {
         log.info("TEST EXEC");
     }
 
-  @Test
+    @Test
     void secondTest() {
         log.info("TEST 2 EXEC");
     }
 
-
+    @Test
+    void thirdFailedTest() {
+        log.info("TEST 3 EXEC");
+        assert false;
+    }
 
     @After
     void clear() {
         log.info("CLEAR DATA");
     }
-
-
 }

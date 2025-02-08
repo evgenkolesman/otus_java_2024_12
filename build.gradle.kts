@@ -33,6 +33,7 @@ allprojects {
     val testcontainersBom: String by project
     val protobufBom: String by project
     val guava: String by project
+    val lombok: String by project
     val jmh: String by project
     val asm: String by project
     val glassfishJson: String by project
@@ -45,6 +46,7 @@ allprojects {
                 mavenBom("org.testcontainers:testcontainers-bom:$testcontainersBom")
                 mavenBom("com.google.protobuf:protobuf-bom:$protobufBom")
             }
+            dependency("org.projectlombok:lombok:$lombok")
             dependency("com.google.guava:guava:$guava")
             dependency("org.openjdk.jmh:jmh-core:$jmh")
             dependency("org.openjdk.jmh:jmh-generator-annprocess:$jmh")

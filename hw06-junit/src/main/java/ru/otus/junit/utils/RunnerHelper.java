@@ -1,87 +1,79 @@
 package ru.otus.junit.utils;
 
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+import java.util.*;
+import ru.otus.junit.annotations.*;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-@UtilityClass
-@Slf4j
 public class RunnerHelper {
-    public static Map<Class<? extends Annotation>, List<Method>> linkedMap = new java.util.LinkedHashMap<>();
+    public static Map<Class<? extends Annotation>, List<Method>> linkedMap = new LinkedHashMap<>();
 
-    @SneakyThrows
     @SuppressWarnings({"varargs", "null"})
-    public void startTestMethods(java.lang.reflect.Method methods, Class<?> aClass) {
-        Object testObject = aClass.getConstructors()[0].newInstance((Object[]) null);
-
-        linkedMap.get(ru.otus.junit.annotations.Before.class).forEach(m -> {
-            try {
-                m.setAccessible(true);
-                m.invoke(testObject);
-            } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    public static void startTestMethods(Method methods, Class<?> aClass) {
+        var ref = new Object() {
+            Object testObject = null;
+        };
         try {
-            methods.setAccessible(true);
-            methods.invoke(testObject);
-        } finally {
-            linkedMap.get(ru.otus.junit.annotations.After.class).forEach(m -> {
+            ref.testObject = aClass.getConstructor().newInstance();
+
+            linkedMap.get(Before.class).forEach(m -> {
                 try {
                     m.setAccessible(true);
-                    m.invoke(testObject);
-                } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
+                    m.invoke(ref.testObject);
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
             });
-        }
-    }
-    public String pathReader() {
-        try (var inputStream = new FileInputStream("./hw06-junit/src/main/resources/application.properties")) {
-            Properties properties = new Properties();
-            properties.load(inputStream);
-
-            return properties.getProperty("test.location.package");
-        } catch (IOException e) {
-            log.error(e.getMessage(), e.getCause());
-            throw new RuntimeException("Problems with property");
-        }
-    }
-
-    public void annotationCollector(Method[] methods) {
-        linkedMap.put(ru.otus.junit.annotations.Test.class, new java.util.ArrayList<>());
-        linkedMap.put(ru.otus.junit.annotations.Before.class, new java.util.ArrayList<>());
-        linkedMap.put(ru.otus.junit.annotations.After.class, new java.util.ArrayList<>());
-
-        java.util.Arrays.stream(methods).sequential()
-                .forEach(
-                        m -> linkedMap.forEach(
-                                (k, v) -> {
-                                    if(m.isAnnotationPresent(k)) {
-                                        linkedMap.get(k).add(m);
-                                    }
-                                }
-
-                        )
-                );
-
-    }
-
-    public void runExactMethod(String methodShortName, Class<?> aClass) {
-        for (java.lang.reflect.Method method : ru.otus.junit.utils.RunnerHelper.linkedMap.get(ru.otus.junit.annotations.Test.class)) {
-            if(method.getName().equals(methodShortName)) {
-                ru.otus.junit.utils.RunnerHelper.startTestMethods(method, aClass);
+            try {
+                methods.setAccessible(true);
+                methods.invoke(ref.testObject);
+            } finally {
+                linkedMap.get(After.class).forEach(m -> {
+                    try {
+                        m.setAccessible(true);
+                        m.invoke(ref.testObject);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
+    public static void annotationCollector(Method[] methods) {
+        linkedMap.put(Test.class, new ArrayList<>());
+        linkedMap.put(Before.class, new ArrayList<>());
+        linkedMap.put(After.class, new ArrayList<>());
 
+        Arrays.stream(methods)
+                .sequential()
+                .forEach(m -> linkedMap.forEach((k, v) -> {
+                    if (m.isAnnotationPresent(k)) {
+                        linkedMap.get(k).add(m);
+                    }
+                }));
+    }
+
+    public static void testClass(String className) {
+
+        Class<?> aClass = getAClass(className);
+        Method[] methods = aClass.getDeclaredMethods();
+        annotationCollector(methods);
+
+        for (Method method : RunnerHelper.linkedMap.get(Test.class)) {
+            RunnerHelper.startTestMethods(method, aClass);
+        }
+    }
+
+    private static Class<?> getAClass(String className) {
+        Class<?> aClass;
+        try {
+            aClass = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return aClass;
+    }
 }
