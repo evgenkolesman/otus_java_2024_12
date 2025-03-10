@@ -20,7 +20,7 @@ class EvenSecondExceptionProcessorTest {
 
     @Test
     void shouldThrowExceptionOnEvenSeconds() {
-        EvenSecondExceptionProcessor processor = new EvenSecondExceptionProcessor();
+        EvenSecondExceptionProcessor processor = new EvenSecondExceptionProcessor(Instant::now);
         Message message = Message.builder().build();
 
         long currentSecond = Instant.now().getEpochSecond();
@@ -35,7 +35,7 @@ class EvenSecondExceptionProcessorTest {
 
     @Test
     void testSpecificEvenSecond() {
-        EvenSecondExceptionProcessor processor = new EvenSecondExceptionProcessor();
+        EvenSecondExceptionProcessor processor = new EvenSecondExceptionProcessor(Instant::now);
         Message message = Message.builder().build();
         Instant mockedInstant = mock(Instant.class);
         when(mockedInstant.getEpochSecond()).thenReturn(2L); // even second
@@ -49,7 +49,7 @@ class EvenSecondExceptionProcessorTest {
 
     @Test
     void testSpecificOddSecond() {
-        EvenSecondExceptionProcessor processor = new EvenSecondExceptionProcessor();
+        EvenSecondExceptionProcessor processor = new EvenSecondExceptionProcessor(Instant::now);
         Message message = Message.builder().build();
 
         Instant mockedInstant = mock(Instant.class);

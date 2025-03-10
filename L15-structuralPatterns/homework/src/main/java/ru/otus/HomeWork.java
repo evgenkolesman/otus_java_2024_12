@@ -1,5 +1,6 @@
 package ru.otus;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class HomeWork {
                 .field13(field13)
                 .build();
 
-        List<Processor> processors = List.of(new SwapFieldsProcessor(), new EvenSecondExceptionProcessor());
+        List<Processor> processors = List.of(new SwapFieldsProcessor(), new EvenSecondExceptionProcessor(Instant::now));
 
         Consumer<Exception> errorHandler = ex -> System.out.println("Error occurred: " + ex.getMessage());
 
