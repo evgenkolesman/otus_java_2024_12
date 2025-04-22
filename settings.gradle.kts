@@ -15,6 +15,7 @@ include("hw09-docker")
 include("hw10-aspect")
 include("hw11-atm")
 include("L15-structuralPatterns:homework")
+include("L16-io:homework")
 
 pluginManagement {
     val jgitver: String by settings
