@@ -24,7 +24,7 @@ public class ResourcesFileLoader implements Loader {
         List<Measurement> measurements;
 
         File jsonFile = fileName.toFile();
-        final var mapper = ObjectMapperFactory.mapper;
+        final var mapper = new ObjectMapper();
         try {
             measurements = mapper.readValue(
                     jsonFile, mapper.getTypeFactory().constructCollectionType(List.class, Measurement.class));
