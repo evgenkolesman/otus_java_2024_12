@@ -19,7 +19,7 @@ import ru.otus.jdbc.mapper.EntitySQLMetaDataImpl;
 
 @SuppressWarnings({"java:S125", "java:S1481"})
 public class HomeWork {
-    private static final String URL = "jdbc:postgresql://localhost:5430/jdbc_test";
+    private static final String URL = "jdbc:postgresql://localhost:5430/";
     private static final String USER = "postgres";
     private static final String PASSWORD = "Password";
 
@@ -27,14 +27,14 @@ public class HomeWork {
 
     public static void main(String[] args) {
         // Общая часть
-        var dataSource = new DriverManagerDataSource(URL, USER, PASSWORD);
+        var dataSource = new DriverManagerDataSource(URL + System.getenv().get("db.schema"), USER, PASSWORD);
         flywayMigrations(dataSource);
         var transactionRunner = new TransactionRunnerJdbc(dataSource);
         var dbExecutor = new DbExecutorImpl();
 
         // Работа с клиентом
         EntityClassMetaData<Client> entityClassMetaDataClient = new EntityClassMetaDataImpl<>() {};
-        EntitySQLMetaData entitySQLMetaDataClient = new EntitySQLMetaDataImpl<>(entityClassMetaDataClient, "jdbc_test");
+        EntitySQLMetaData<Client> entitySQLMetaDataClient = new EntitySQLMetaDataImpl<>(entityClassMetaDataClient);
         var dataTemplateClient = new DataTemplateJdbc<Client>(
                 dbExecutor, entitySQLMetaDataClient); // реализация DataTemplate, универсальная
 
@@ -51,8 +51,7 @@ public class HomeWork {
         // Сделайте тоже самое с классом Manager (для него надо сделать свою таблицу)
 
         EntityClassMetaData<Manager> entityClassMetaDataManager = new EntityClassMetaDataImpl<>() {};
-        EntitySQLMetaData entitySQLMetaDataManager =
-                new EntitySQLMetaDataImpl<>(entityClassMetaDataManager, "jdbc_test");
+        EntitySQLMetaData<Manager> entitySQLMetaDataManager = new EntitySQLMetaDataImpl<>(entityClassMetaDataManager);
         var dataTemplateManager = new DataTemplateJdbc<Manager>(dbExecutor, entitySQLMetaDataManager);
 
         var dbServiceManager = new DbServiceManagerImpl(transactionRunner, dataTemplateManager);

@@ -1,17 +1,31 @@
 package ru.otus.jdbc.mapper;
 
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 import lombok.val;
 
-@RequiredArgsConstructor
-public class EntitySQLMetaDataImpl<T> implements EntitySQLMetaData {
-    private final EntityClassMetaData<T> entityClassMetaDataManager;
-    private final String DEFAULT_SCHEMA;
+public class EntitySQLMetaDataImpl<T> implements EntitySQLMetaData<T> {
+    @Getter
+    private final EntityClassMetaData<T> entityClassMetaData;
+
+    private final String resourceSchema;
+
+    public EntitySQLMetaDataImpl(EntityClassMetaData<T> entityClassMetaData) {
+        this.entityClassMetaData = entityClassMetaData;
+        this.resourceSchema = getSchemaFromResources();
+    }
+
+    private String getSchemaFromResources() {
+        try {
+            return System.getenv().get("db.schema");
+        } catch (Exception e) {
+            return "public";
+        }
+    }
 
     @Override
     public String getSelectAllSql() {
-        return "SELECT *  FROM %s.%s".formatted(DEFAULT_SCHEMA, entityClassMetaDataManager.getName());
+        return "SELECT *  FROM %s.%s".formatted(resourceSchema, entityClassMetaData.getName());
     }
 
     @Override
@@ -21,32 +35,32 @@ public class EntitySQLMetaDataImpl<T> implements EntitySQLMetaData {
 
     @Override
     public String getInsertSql() {
-        val fieldsWithoutId = entityClassMetaDataManager.getFieldsWithoutId().stream()
+        val fieldsWithoutId = entityClassMetaData.getFieldsWithoutId().stream()
                 .map(FieldsUtil::toColumnName)
                 .collect(Collectors.joining(", "));
-        val fieldsWithoutIdForInsert = entityClassMetaDataManager.getFieldsWithoutId().stream()
+        val fieldsWithoutIdForInsert = entityClassMetaData.getFieldsWithoutId().stream()
                 .map(field -> "?")
                 .collect(Collectors.joining(", "));
 
         return "INSERT INTO %s(%s) VALUES (%s)"
                 .formatted(
                         //                        DEFAULT_SCHEMA,
-                        DEFAULT_SCHEMA + "." + entityClassMetaDataManager.getName(),
+                        resourceSchema + "." + entityClassMetaData.getName(),
                         fieldsWithoutId,
                         fieldsWithoutIdForInsert);
     }
 
     @Override
     public String getUpdateSql() {
-        val fieldsWithoutId = entityClassMetaDataManager.getFieldsWithoutId().stream()
+        val fieldsWithoutId = entityClassMetaData.getFieldsWithoutId().stream()
                 .map(field -> "%s = :%s".formatted(FieldsUtil.toColumnName(field), FieldsUtil.toColumnName(field)))
                 .collect(Collectors.joining(", "));
 
         return "UPDATE %s,%s SET %s WHERE %s = ?"
                 .formatted(
-                        DEFAULT_SCHEMA,
-                        entityClassMetaDataManager.getName(),
+                        resourceSchema,
+                        entityClassMetaData.getName(),
                         fieldsWithoutId,
-                        FieldsUtil.toColumnName(entityClassMetaDataManager.getIdField()));
+                        FieldsUtil.toColumnName(entityClassMetaData.getIdField()));
     }
 }

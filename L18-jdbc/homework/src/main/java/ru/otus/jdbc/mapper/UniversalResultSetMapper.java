@@ -3,36 +3,22 @@ package ru.otus.jdbc.mapper;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import lombok.val;
 
-@SuppressWarnings("unchecked")
 public class UniversalResultSetMapper<T> {
-    private final EntityClassMetaData<T> entitySQLMetaData;
+    private final EntityClassMetaData<T> entityClassMetaData;
 
-    public UniversalResultSetMapper(EntitySQLMetaData entitySQLMetaData) {
-        val declaredFields = entitySQLMetaData.getClass().getDeclaredFields();
-        EntityClassMetaData<T> first;
-        try {
-            val field = Arrays.stream(declaredFields)
-                    .filter(a -> "entityClassMetaDataManager".equalsIgnoreCase(a.getName()))
-                    .findFirst()
-                    .orElseThrow();
-            field.setAccessible(true);
-            first = (EntityClassMetaData<T>) field.get(entitySQLMetaData);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        this.entitySQLMetaData = first;
+    public UniversalResultSetMapper(EntityClassMetaData<T> entityClassMetaData) {
+        this.entityClassMetaData = entityClassMetaData;
     }
 
     public T map(ResultSet resultSet) {
         T tClass;
         try {
-            tClass = entitySQLMetaData.getConstructor().newInstance();
+            tClass = entityClassMetaData.getConstructor().newInstance();
 
             T finalTClass = tClass;
-            entitySQLMetaData.getAllFields().forEach(field -> {
+            entityClassMetaData.getAllFields().forEach(field -> {
                 try {
                     if (resultSet.next()) {
                         field.setAccessible(true);

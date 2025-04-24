@@ -15,6 +15,7 @@ import ru.otus.crm.annotation.Table;
 public abstract class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
     private final Class<T> clazz;
     private final List<Field> listFieldsCache;
+    private final Constructor<T> constructor;
 
     @SuppressWarnings("unchecked")
     public EntityClassMetaDataImpl() {
@@ -25,6 +26,10 @@ public abstract class EntityClassMetaDataImpl<T> implements EntityClassMetaData<
             throw new RuntimeException("Unable to determine generic type parameter");
         }
         this.listFieldsCache = Arrays.stream(clazz.getDeclaredFields()).toList();
+        this.constructor = (Constructor<T>) Arrays.stream(clazz.getConstructors())
+                .filter(constructor -> constructor.isAnnotationPresent(Creator.class))
+                .findFirst()
+                .orElse(clazz.getConstructors()[0]);
     }
 
     @Override
@@ -39,12 +44,8 @@ public abstract class EntityClassMetaDataImpl<T> implements EntityClassMetaData<
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Constructor<T> getConstructor() {
-        return (Constructor<T>) Arrays.stream(clazz.getConstructors())
-                .filter(constructor -> constructor.isAnnotationPresent(Creator.class))
-                .findFirst()
-                .orElse(clazz.getConstructors()[0]);
+        return constructor;
     }
 
     @Override

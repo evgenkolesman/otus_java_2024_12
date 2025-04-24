@@ -8,19 +8,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.*;
+import lombok.val;
 import ru.otus.core.repository.DataTemplate;
 import ru.otus.core.repository.executor.DbExecutor;
 import ru.otus.crm.annotation.Id;
 
-/** Сохратяет объект в базу, читает объект из базы */
+/**
+ * Сохратяет объект в базу, читает объект из базы
+ */
 @SuppressWarnings("java:S1068")
 public class DataTemplateJdbc<T> implements DataTemplate<T> {
 
     private final DbExecutor dbExecutor;
-    private final EntitySQLMetaData entitySQLMetaData;
+    private final EntitySQLMetaData<T> entitySQLMetaData;
 
-    public DataTemplateJdbc(DbExecutor dbExecutor, EntitySQLMetaData entitySQLMetaData) {
+    public DataTemplateJdbc(DbExecutor dbExecutor, EntitySQLMetaData<T> entitySQLMetaData) {
         this.dbExecutor = dbExecutor;
         this.entitySQLMetaData = entitySQLMetaData;
     }
@@ -32,7 +34,8 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
                 connection,
                 entitySQLMetaData.getSelectByIdSql(),
                 List.of(id),
-                (ResultSet resultSet) -> new UniversalResultSetMapper<T>(entitySQLMetaData).map(resultSet));
+                (ResultSet resultSet) ->
+                        new UniversalResultSetMapper<>(entitySQLMetaData.getEntityClassMetaData()).map(resultSet));
     }
 
     @Override
