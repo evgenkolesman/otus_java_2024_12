@@ -12,15 +12,7 @@ public class EntitySQLMetaDataImpl<T> implements EntitySQLMetaData<T> {
 
     public EntitySQLMetaDataImpl(EntityClassMetaData<T> entityClassMetaData) {
         this.entityClassMetaData = entityClassMetaData;
-        this.resourceSchema = getSchemaFromResources();
-    }
-
-    private String getSchemaFromResources() {
-        try {
-            return System.getenv().get("db.schema");
-        } catch (Exception e) {
-            return "public";
-        }
+        this.resourceSchema = ResourcesUtil.getSchema();
     }
 
     @Override
