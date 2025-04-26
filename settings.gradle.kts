@@ -16,6 +16,8 @@ include("hw10-aspect")
 include("hw11-atm")
 include("L15-structuralPatterns:homework")
 include("L16-io:homework")
+include("L18-jdbc:homework")
+include("L18-jdbc:demo")
 
 pluginManagement {
     val jgitver: String by settings
