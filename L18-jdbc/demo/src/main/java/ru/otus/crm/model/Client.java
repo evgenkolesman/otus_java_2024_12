@@ -8,7 +8,6 @@ public class Client {
     public Client() {}
 
     public Client(String name) {
-        this.id = null;
         this.name = name;
     }
 
