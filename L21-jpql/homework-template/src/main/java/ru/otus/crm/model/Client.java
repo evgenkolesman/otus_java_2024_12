@@ -48,7 +48,7 @@ public class Client implements Cloneable {
         this.name = name;
     }
 
-    public <E> Client(Long id, String name, Address address, List<Phone> phones) {
+    public Client(Long id, String name, Address address, List<Phone> phones) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -65,7 +65,7 @@ public class Client implements Cloneable {
     }
 
     @Override
-    @SuppressWarnings({"java:S2975", "java:S1182"})
+    @SuppressWarnings({"java:S2975", "java:S1182, CloneDoesntCallSuperClone"})
     public Client clone() {
         return new Client(this.id, this.name, this.address, this.phones);
     }

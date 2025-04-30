@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "addresses")
-public class Address {
+public class Address implements Cloneable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,5 +24,12 @@ public class Address {
     public Address(Long id, String street) {
         this.id = id;
         this.street = street;
+    }
+
+
+    @Override
+    @SuppressWarnings({"java:S2975", "java:S1182, CloneDoesntCallSuperClone"})
+    public Address clone() {
+        return new Address(this.id, this.street);
     }
 }
