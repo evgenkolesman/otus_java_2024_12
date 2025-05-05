@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.val;
 
 @Entity
 @NoArgsConstructor
@@ -39,7 +40,8 @@ public class Phone implements Cloneable {
     @Override
     @SuppressWarnings({"java:S2975", "java:S1182, CloneDoesntCallSuperClone"})
     public Phone clone() {
-        return new Phone(this.id, this.number, this.client);
+        val clientFull = client == null ? null : client.clone();
+        return new Phone(this.id, this.number, clientFull);
     }
 
 }
